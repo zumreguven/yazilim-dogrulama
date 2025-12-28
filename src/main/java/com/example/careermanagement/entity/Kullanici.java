@@ -1,7 +1,5 @@
-// src/main/java/com/example/careermanagement/entity/Kullanici.java
 package com.example.careermanagement.entity;
 
-import lombok.Data;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +13,6 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "kullanici_adi"),
                 @UniqueConstraint(columnNames = "eposta")
         })
-@Data  // @Getter ve @Setter yerine sadece @Data kullanıyoruz
 public class Kullanici extends TemelVarlik {
     @NotBlank
     @Size(max = 20)
@@ -40,6 +37,47 @@ public class Kullanici extends TemelVarlik {
             joinColumns = @JoinColumn(name = "kullanici_id"),
             inverseJoinColumns = @JoinColumn(name = "rol_id"))
     private Set<Rol> roller = new HashSet<>();
+
+    // Getter ve Setter'lar
+    public String getKullaniciAdi() {
+        return kullaniciAdi;
+    }
+
+    public void setKullaniciAdi(String kullaniciAdi) {
+        this.kullaniciAdi = kullaniciAdi;
+    }
+
+    public String getEposta() {
+        return eposta;
+    }
+
+    public void setEposta(String eposta) {
+        this.eposta = eposta;
+    }
+
+    public String getSifre() {
+        return sifre;
+    }
+
+    public void setSifre(String sifre) {
+        this.sifre = sifre;
+    }
+
+    public String getAdSoyad() {
+        return adSoyad;
+    }
+
+    public void setAdSoyad(String adSoyad) {
+        this.adSoyad = adSoyad;
+    }
+
+    public Set<Rol> getRoller() {
+        return roller;
+    }
+
+    public void setRoller(Set<Rol> roller) {
+        this.roller = roller;
+    }
 
     public Kullanici() {
     }
