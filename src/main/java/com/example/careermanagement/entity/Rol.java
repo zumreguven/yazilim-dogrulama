@@ -19,4 +19,8 @@ public class Rol extends TemelVarlik {
     public Rol(RolTuru adi) {
         this.adi = adi;
     }
+
+    public RolTuru getAdi() {
+        return this.adi;
+    }
 }

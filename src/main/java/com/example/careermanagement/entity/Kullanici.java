@@ -83,6 +83,11 @@ public class Kullanici extends TemelVarlik {
         this.roller = roller;
     }
 
+    public Long getId() {
+        return this.getKimlik();
+    }
+
+
     public Kullanici() {
     }
 
