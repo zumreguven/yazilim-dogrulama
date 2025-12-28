@@ -24,4 +24,9 @@ public abstract class TemelVarlik {
     @LastModifiedDate
     @Column(name = "guncelleme_tarihi")
     private LocalDateTime guncellemeTarihi;
+
+
+    public Long getKimlik() {
+        return this.kimlik;
+    }
 }
