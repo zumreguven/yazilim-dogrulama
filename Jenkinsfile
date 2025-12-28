@@ -28,12 +28,6 @@ pipeline {
             post {
                 always {
                     junit '**/target/surefire-reports/*.xml'
-                    jacoco(
-                        execPattern: '**/target/jacoco.exec',
-                        classPattern: '**/target/classes',
-                        sourcePattern: 'src/main/java',
-                        exclusionPattern: '**/test/**'
-                    )
                 }
             }
         }
@@ -52,89 +46,29 @@ pipeline {
 
         stage('Docker Compose Up') {
             steps {
-                echo '5. Docker konteynerları başlatılıyor...'
+                echo '5. Docker Compose başlatılıyor...'
                 sh 'docker-compose -f docker-compose.ci.yml up -d'
-                // Uygulamanın başlaması için bekle
-                sh 'sleep 30'
+                sh 'sleep 30' // Uygulamanın başlaması için bekle
             }
         }
 
-        stage('Selenium Tests - Login') {
+        stage('Selenium Tests') {
             steps {
-                echo '6.1. Giriş Testleri Çalıştırılıyor...'
-                sh 'mvn test -Dtest=LoginSeleniumTest'
+                echo '6. Selenium testleri çalıştırılıyor...'
+                sh 'mvn test -Dtest=LoginSeleniumTest,HomePageSeleniumTest,CareerGoalSeleniumTest'
             }
             post {
                 always {
                     junit '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
-
-        stage('Selenium Tests - Home Page') {
-            steps {
-                echo '6.2. Ana Sayfa Testleri Çalıştırılıyor...'
-                sh 'mvn test -Dtest=HomePageSeleniumTest'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
-
-        stage('Selenium Tests - Career Goals') {
-            steps {
-                echo '6.3. Kariyer Hedefi Testleri Çalıştırılıyor...'
-                sh 'mvn test -Dtest=CareerGoalSeleniumTest'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                echo '5. Docker imajı oluşturuluyor...'
-                sh 'docker-compose -f docker-compose.ci.yml build'
-            }
-        }
-
-        stage('Run System Tests') {
-            steps {
-                echo '6. Selenium test senaryoları çalıştırılıyor...'
-                script {
-                    try {
-                        // Uygulama ve bağımlılıkları başlat
-                        sh 'docker-compose -f docker-compose.ci.yml up -d'
-                        
-                        // Uygulamanın başlamasını bekle
-                        sh 'sleep 60'
-                        
-                        // Testleri çalıştır
-                        sh 'mvn test -Dtest=*SeleniumTest'
-                        
-                    } finally {
-                        // Test sonrası temizlik
-                        sh 'docker-compose -f docker-compose.ci.yml down --remove-orphans'
-                    }
-                }
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                    archiveArtifacts '**/screenshots/*.png'
                 }
             }
         }
     }
-    
+
     post {
         always {
-            // Sonuçları temizle
-            cleanWs()
+            echo '7. Temizlik yapılıyor...'
+            sh 'docker-compose -f docker-compose.ci.yml down'
         }
     }
 }
