@@ -52,7 +52,7 @@ pipeline {
         stage('Docker Compose Up') {
             steps {
                 echo '5. Docker Compose başlatılıyor...'
-                sh 'docker-compose -f docker-compose.ci.yml up -d'
+                sh 'docker compose -f docker-compose.ci.yml up -d'
                 sh 'sleep 30' // Uygulamanın başlaması için bekle
             }
         }
@@ -73,7 +73,7 @@ pipeline {
     post {
         always {
             echo '7. Temizlik yapılıyor...'
-            sh 'docker-compose -f docker-compose.ci.yml down'
+            sh 'docker compose -f docker-compose.ci.yml down'
         }
     }
 }

@@ -1,3 +1,4 @@
+// src/main/java/com/example/careermanagement/entity/Kullanici.java
 package com.example.careermanagement.entity;
 
 import jakarta.persistence.*;
