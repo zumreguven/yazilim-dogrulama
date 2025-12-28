@@ -38,7 +38,7 @@ public class KullaniciDetaylariImpl implements UserDetails {
                 .collect(Collectors.toList());
 
         return new KullaniciDetaylariImpl(
-                kullanici.getId(),
+                kullanici.getKimlik(),
                 kullanici.getKullaniciAdi(),
                 kullanici.getEposta(),
                 kullanici.getSifre(),

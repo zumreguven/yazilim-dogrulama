@@ -51,6 +51,10 @@ public class Kullanici extends TemelVarlik {
         return eposta;
     }
 
+    public Long getKimlik() {
+        return super.getKimlik();
+    }
+
     public void setEposta(String eposta) {
         this.eposta = eposta;
     }
