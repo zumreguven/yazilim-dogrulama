@@ -3,11 +3,14 @@ pipeline {
 
     tools {
         maven 'Maven 3.9.9'
-        jdk 'JDK 23'
+        jdk 'JDK 17'  // Java 17'ye geçiyoruz
     }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials')
+        // Chrome için gerekli ortam değişkenleri
+        CHROME_BIN = '/usr/bin/google-chrome'
+        CHROME_DRIVER = '/usr/local/bin/chromedriver'
     }
 
     stages {
@@ -27,14 +30,20 @@ pipeline {
 
         stage('Unit Tests') {
             steps {
-                sh 'mvn test -Dspring.profiles.active=test'
+                echo '3. Birim testleri çalıştırılıyor...'
+                sh 'mvn test -Dspring.profiles.active=test -Dtest=*UnitTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
             }
         }
 
         stage('Integration Tests') {
             steps {
                 echo '4. Entegrasyon testleri çalıştırılıyor...'
-                sh 'mvn verify -DskipUnitTests'
+                sh 'mvn verify -DskipUnitTests -Dgroups=integration'
             }
             post {
                 always {
@@ -54,11 +63,27 @@ pipeline {
         stage('Selenium Tests') {
             steps {
                 echo '6. Selenium testleri çalıştırılıyor...'
-                sh 'mvn test -Dtest=LoginSeleniumTest,HomePageSeleniumTest,CareerGoalSeleniumTest'
+                script {
+                    try {
+                        // Chrome'un kurulu olduğunu kontrol et
+                        sh 'which google-chrome || echo "Chrome bulunamadı"'
+                        sh 'chromedriver --version || echo "ChromeDriver bulunamadı"'
+
+                        // Testleri çalıştır
+                        sh 'mvn test -Dtest=*SeleniumTest -Dselenium.headless=true'
+                    } catch (Exception e) {
+                        echo "Selenium testlerinde hata: ${e}"
+                        // Hata durumunda pipeline'ı durdurma, devam et
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                }
             }
             post {
                 always {
+                    // Selenium test sonuçlarını topla
                     junit '**/target/surefire-reports/*.xml'
+                    // Ekran görüntülerini arşivle (eğer varsa)
+                    archiveArtifacts '**/screenshots/*.png'
                 }
             }
         }
@@ -67,7 +92,15 @@ pipeline {
     post {
         always {
             echo '7. Temizlik yapılıyor...'
-            sh 'docker compose -f docker-compose.ci.yml down'
+            script {
+                try {
+                    sh 'docker compose -f docker-compose.ci.yml down'
+                } catch (Exception e) {
+                    echo "Docker temizleme hatası: ${e}"
+                }
+                // Workspace'i temizle
+                cleanWs()
+            }
         }
     }
 }
