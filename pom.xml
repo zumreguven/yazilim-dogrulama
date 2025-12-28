@@ -22,6 +22,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <jjwt.version>0.11.5</jjwt.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
     </properties>
 
     <dependencies>
@@ -74,6 +75,14 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Jakarta Servlet API -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test -->
@@ -133,12 +142,6 @@
             <artifactId>mockito-core</artifactId>
             <version>5.7.0</version>
             <scope>test</scope>
-        </dependency>
-        <!-- Jacoco (Test Coverage) -->
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.10</version>
         </dependency>
     </dependencies>
 
