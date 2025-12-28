@@ -23,6 +23,12 @@
         <maven.compiler.target>17</maven.compiler.target>
         <jjwt.version>0.11.5</jjwt.version>
         <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <junit-jupiter.version>5.9.2</junit-jupiter.version>
+        <selenium.version>4.15.0</selenium.version>
+        <webdrivermanager.version>5.6.2</webdrivermanager.version>
+        <testcontainers.version>1.19.3</testcontainers.version>
+        <selenium.headless>true</selenium.headless>
+
     </properties>
 
     <dependencies>
@@ -85,7 +91,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Test -->
+        <!-- Test Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -104,39 +110,42 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <!-- TestContainers -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.19.3</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.19.3</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.15.0</version>
+            <version>${selenium.version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- WebDriverManager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>5.6.2</version>
+            <version>${webdrivermanager.version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- AssertJ -->
         <dependency>
             <groupId>org.assertj</groupId>
@@ -144,6 +153,7 @@
             <version>3.24.2</version>
             <scope>test</scope>
         </dependency>
+
         <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -175,6 +185,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- Surefire Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -185,8 +196,12 @@
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <selenium.headless>${selenium.headless}</selenium.headless>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
+
             <!-- Failsafe Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -206,6 +221,7 @@
                     </includes>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
