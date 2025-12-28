@@ -1,12 +1,11 @@
 // src/main/java/com/example/careermanagement/entity/Kullanici.java
 package com.example.careermanagement.entity;
 
+import lombok.Data;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +15,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "kullanici_adi"),
                 @UniqueConstraint(columnNames = "eposta")
         })
-@Getter
-@Setter
+@Data  // @Getter ve @Setter yerine sadece @Data kullanıyoruz
 public class Kullanici extends TemelVarlik {
     @NotBlank
     @Size(max = 20)
